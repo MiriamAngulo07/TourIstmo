@@ -67,7 +67,7 @@ export default function Home() {
           }}
         >
           {DESTINATIONS.map((d) => (
-            <DestinationCard key={d.id} item={d} />
+            <DestinationCard key={d.id} item={d} kind="destinos" carousel />
           ))}
         </div>
         <div style={{ textAlign: "center", marginTop: 24 }}>
@@ -117,7 +117,7 @@ export default function Home() {
           }}
         >
           {PLANS.map((p) => (
-            <DestinationCard key={p.id} item={p} />
+            <DestinationCard key={p.id} item={p} kind="planes" carousel />
           ))}
         </div>
         <div style={{ textAlign: "center", marginTop: 24 }}>
@@ -159,15 +159,9 @@ export default function Home() {
             marginBottom: 32,
           }}
         >
-          Ultimas Noticias
+          Últimas noticias
         </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "2fr 1fr 1fr",
-            gap: 20,
-          }}
-        >
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
           {NEWS.map((n, i) => (
             <article
               key={i}
@@ -233,17 +227,6 @@ export default function Home() {
                 >
                   {n.title}
                 </h3>
-                <Link
-                  href="#"
-                  style={{
-                    color: "#D57133",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    textDecoration: "none",
-                  }}
-                >
-                  Leer mas &rarr;
-                </Link>
               </div>
             </article>
           ))}

@@ -237,3 +237,14 @@ All logos and destination photos are in `assets/`:
         ├── LoginForm.jsx
         └── Dashboard.jsx
 ```
+
+## Base de datos local del catálogo
+
+Con Node.js 24 o superior, ejecuta `node scripts/init_catalog_db.mjs` desde la
+raíz del repositorio. El script crea `data/touristmo.sqlite` con los destinos y
+planes de `lib/data.ts`. Puedes volver a ejecutarlo para agregar filas
+faltantes sin duplicar ni sobrescribir las existentes.
+
+La base sirve para desarrollo y consultas locales. La aplicación web y el
+despliegue siguen leyendo `lib/data.ts`. SQLite guarda únicamente el catálogo
+público. El archivo generado se excluye de Git.

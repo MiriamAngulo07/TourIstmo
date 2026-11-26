@@ -7,13 +7,7 @@ const footerLinks = {
     { label: "Destinos", href: "/destinos" },
     { label: "Planes Turisticos", href: "/planes" },
   ],
-  colabora: [
-    { label: "Unete al equipo", href: "#" },
-    { label: "Publica tus planes", href: "#" },
-  ],
   soporte: [
-    { label: "Terminos y Condiciones", href: "#" },
-    { label: "Privacidad", href: "#" },
     { label: "Ayuda", href: "/ayuda" },
   ],
 };
@@ -49,10 +43,8 @@ export function Footer() {
           zIndex: 2,
         }}
       >
-        <div
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]"
           style={{
-            display: "grid",
-            gridTemplateColumns: "1.4fr 1fr 1fr 1fr",
             gap: 32,
             marginBottom: 32,
           }}
@@ -136,7 +128,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Colabora & Soporte */}
           <div>
             <h4
               style={{
@@ -144,39 +135,6 @@ export function Footer() {
                 fontWeight: 600,
                 color: "#fff",
                 fontFamily: "var(--font-poppins), 'Poppins', sans-serif",
-                marginBottom: 12,
-                paddingBottom: 6,
-                borderBottom: "2px solid #D57133",
-                display: "inline-block",
-              }}
-            >
-              Colabora
-            </h4>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-              {footerLinks.colabora.map((l) => (
-                <li key={l.label}>
-                  <Link
-                    href={l.href}
-                    style={{
-                      color: "rgba(255,255,255,.8)",
-                      textDecoration: "none",
-                      fontSize: 13,
-                      display: "block",
-                      padding: "3px 0",
-                    }}
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <h4
-              style={{
-                fontSize: 14,
-                fontWeight: 600,
-                color: "#fff",
-                fontFamily: "var(--font-poppins), 'Poppins', sans-serif",
-                marginTop: 16,
                 marginBottom: 12,
                 paddingBottom: 6,
                 borderBottom: "2px solid #D57133",

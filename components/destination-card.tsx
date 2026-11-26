@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 
 export interface Destination {
@@ -29,12 +29,46 @@ const typeColors: Record<string, { bg: string; color: string; border: string }> 
 
 interface DestinationCardProps {
   item: Destination;
-  onClick?: () => void;
+  kind: "destinos" | "planes";
+  carousel?: boolean;
 }
 
-export function DestinationCard({ item, onClick }: DestinationCardProps) {
-  const [saved, setSaved] = useState(false);
+const favoritesChanged = "touristmo:favorites";
+const favoritesInMemory = new Map<string, boolean>();
+
+function subscribeToFavorites(listener: () => void) {
+  window.addEventListener(favoritesChanged, listener);
+  window.addEventListener("storage", listener);
+  return () => {
+    window.removeEventListener(favoritesChanged, listener);
+    window.removeEventListener("storage", listener);
+  };
+}
+
+export function DestinationCard({ item, kind, carousel }: DestinationCardProps) {
+  const key = `touristmo:favorite:${kind}:${item.id}`;
+  const saved = useSyncExternalStore(
+    subscribeToFavorites,
+    () => {
+      try {
+        return localStorage.getItem(key) === "1";
+      } catch {
+        return favoritesInMemory.get(key) ?? false;
+      }
+    },
+    () => false,
+  );
   const [isHovered, setIsHovered] = useState(false);
+
+  function toggleFavorite() {
+    try {
+      if (saved) localStorage.removeItem(key);
+      else localStorage.setItem(key, "1");
+    } catch {
+      favoritesInMemory.set(key, !saved);
+    }
+    window.dispatchEvent(new Event(favoritesChanged));
+  }
 
   const tc = typeColors[item.tipo] || {
     bg: "#F8F9FA",
@@ -44,7 +78,6 @@ export function DestinationCard({ item, onClick }: DestinationCardProps) {
 
   return (
     <div
-      onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
@@ -52,13 +85,12 @@ export function DestinationCard({ item, onClick }: DestinationCardProps) {
         borderRadius: 16,
         overflow: "hidden",
         border: "1px solid #E1E8ED",
-        cursor: "pointer",
         boxShadow: isHovered
           ? "0 15px 35px rgba(40,57,81,.2)"
           : "0 1px 3px rgba(40,57,81,.08)",
         transform: isHovered ? "translateY(-8px)" : "none",
         transition: "transform .3s ease, box-shadow .3s ease",
-        minWidth: 260,
+        minWidth: carousel ? 260 : 0,
         flexShrink: 0,
       }}
     >
@@ -71,10 +103,10 @@ export function DestinationCard({ item, onClick }: DestinationCardProps) {
           sizes="(max-width: 768px) 100vw, 300px"
         />
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setSaved(!saved);
-          }}
+          type="button"
+          aria-label={`Favorito: ${item.nombre}`}
+          aria-pressed={saved}
+          onClick={toggleFavorite}
           style={{
             position: "absolute",
             top: 10,

@@ -47,3 +47,6 @@ __pycache__/
 !/data/cache/.gitkeep
 !/data/embeddings/.gitkeep
 !/data/vectordb/.gitkeep
+
+# Base SQLite local del catálogo
+/data/touristmo.sqlite*
