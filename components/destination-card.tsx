@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useId, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 
 export interface Destination {
@@ -46,6 +46,9 @@ function subscribeToFavorites(listener: () => void) {
 }
 
 export function DestinationCard({ item, kind, carousel }: DestinationCardProps) {
+  const titleId = useId();
+  const details = useRef<HTMLDialogElement>(null);
+  const price = item.precio ? `$${item.precio}` : "Gratis";
   const key = `touristmo:favorite:${kind}:${item.id}`;
   const saved = useSyncExternalStore(
     subscribeToFavorites,
@@ -81,6 +84,7 @@ export function DestinationCard({ item, kind, carousel }: DestinationCardProps) 
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
+        position: "relative",
         background: "#fff",
         borderRadius: 16,
         overflow: "hidden",
@@ -109,6 +113,7 @@ export function DestinationCard({ item, kind, carousel }: DestinationCardProps) 
           onClick={toggleFavorite}
           style={{
             position: "absolute",
+            zIndex: 20,
             top: 10,
             right: 10,
             background: saved ? "rgba(231,76,60,.1)" : "rgba(255,255,255,.9)",
@@ -208,10 +213,42 @@ export function DestinationCard({ item, kind, carousel }: DestinationCardProps) 
             ★ {item.rating}
           </span>
           <span style={{ fontSize: 13, fontWeight: 700, color: "#3f6b69" }}>
-            {item.precio ? `$${item.precio}` : "Gratis"}
+            {price}
           </span>
         </div>
       </div>
+      <button
+        type="button"
+        aria-label={`Ver detalles de ${item.nombre}`}
+        aria-haspopup="dialog"
+        className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-teal-text"
+        onClick={() => details.current?.showModal()}
+      />
+      <dialog
+        ref={details}
+        aria-labelledby={titleId}
+        className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-2xl bg-white text-navy shadow-xl backdrop:bg-navy/65"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) details.current?.close();
+        }}
+      >
+        <div>
+          <div className="relative h-52">
+            <Image src={item.imagen} alt="" fill sizes="(max-width: 544px) 100vw, 512px" className="object-cover" />
+          </div>
+          <div className="space-y-4 p-5">
+            <h2 id={titleId} className="font-display text-2xl font-bold">{item.nombre}</h2>
+            <p className="text-sm text-muted">{item.provincia} · {item.tipo}</p>
+            <p>{item.desc?.trim() || "Descripción no disponible."}</p>
+            <p className="font-semibold">Valoración: {item.rating} · Precio de referencia: {price}</p>
+            <form method="dialog">
+              <button type="submit" autoFocus className="rounded-full bg-navy px-4 py-2 font-semibold text-white">
+                Cerrar
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }
