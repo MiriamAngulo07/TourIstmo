@@ -49,7 +49,7 @@ docker compose up --build
 - **Fonts:** Inter + Poppins loaded via `next/font/google` in `app/layout.tsx`, exposed as CSS variables `--font-inter` / `--font-poppins`.
 - **All UI copy is Spanish.** No i18n, no language toggles.
 - **No icon library** — all icons are inline SVG. Do not add icon npm packages.
-- **Static data** lives in `lib/data.ts`. There is no API/database for the frontend yet.
+- **Static data** lives in `lib/data.ts`. Set `TOURISTMO_CATALOG_SOURCE=sqlite` to read the local catalog database in the frontend.
 - **Images from Unsplash** — only `images.unsplash.com` and `developer.apple.com` are allowed in `next.config.ts` `remotePatterns`.
 
 ## Design system

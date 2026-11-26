@@ -245,6 +245,18 @@ raíz del repositorio. El script crea `data/touristmo.sqlite` con los destinos y
 planes de `lib/data.ts`. Puedes volver a ejecutarlo para agregar filas
 faltantes sin duplicar ni sobrescribir las existentes.
 
-La base sirve para desarrollo y consultas locales. La aplicación web y el
-despliegue siguen leyendo `lib/data.ts`. SQLite guarda únicamente el catálogo
-público. El archivo generado se excluye de Git.
+Para abrir la base en DBeaver, crea una conexión **SQLite** y selecciona
+`data/touristmo.sqlite` como archivo de base de datos. Abre la tabla `catalogo`
+y confirma las ediciones con **Guardar** o **Commit**, según el modo de transacción.
+
+Para que Inicio, Destinos y Planes lean la base local, inicia Next.js con
+`TOURISTMO_CATALOG_SOURCE=sqlite`. En PowerShell:
+
+```powershell
+$env:TOURISTMO_CATALOG_SOURCE = "sqlite"
+npm run dev
+```
+
+Recarga la página para ver los cambios confirmados en DBeaver. Sin esa variable,
+la aplicación usa los datos de `lib/data.ts`. SQLite guarda únicamente el
+catálogo público y el archivo generado se excluye de Git.

@@ -4,7 +4,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { HeroSection } from "@/components/hero-section";
 import { DestinationCard } from "@/components/destination-card";
-import { DESTINATIONS, PLANS } from "@/lib/data";
+import { loadCatalog } from "@/lib/catalog-source";
 
 const NEWS = [
   {
@@ -33,7 +33,12 @@ const NEWS = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const [destinations, plans] = await Promise.all([
+    loadCatalog("destinos"),
+    loadCatalog("planes"),
+  ]);
+
   return (
     <div className="fade-in">
       <Navbar />
@@ -66,7 +71,7 @@ export default function Home() {
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {DESTINATIONS.map((d) => (
+          {destinations.map((d) => (
             <DestinationCard key={d.id} item={d} kind="destinos" carousel />
           ))}
         </div>
@@ -116,7 +121,7 @@ export default function Home() {
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {PLANS.map((p) => (
+          {plans.map((p) => (
             <DestinationCard key={p.id} item={p} kind="planes" carousel />
           ))}
         </div>
